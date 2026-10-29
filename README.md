@@ -6,49 +6,41 @@ Haoxuan Song*, Bingchen Yang*, Jun Xiao, Peter Wonka, Haiyong Jiang
 
 *Equal contribution. Haiyong Jiang is the corresponding author and project lead.*
 
-BRepDSN combines face-adjacency and vertex-adjacency graph features for boundary-aware B-Rep representation learning. The supplied manuscript evaluates modeling operation segmentation, operation step segmentation, B-Rep classification, machining feature segmentation, and assembly mating, with task-specific decoders and training.
+**[Project Page](https://shinodashx.github.io/BrepDSN/)** · **[Code](https://github.com/shinodashx/BrepDSN)**
 
-![BRepDSN analysis results](docs/assets/teaser.webp)
+BRepDSN is a dual-stream network for B-Rep representation learning that leverages complementary features from a Face-adjacency Graph (FG) and a Vertex-adjacency Graph (VG). Bidirectional feature exchange, face-vertex contrastive learning, and auxiliary boundary classification enable boundary-aware and semantically aligned feature encoding.
 
-## Project homepage
+[![BRepDSN analysis results](docs/assets/teaser.webp)](https://shinodashx.github.io/BrepDSN/)
 
-The static website is in [`docs/`](docs/), following the [CADRec homepage](https://shinodashx.github.io/CADRec/). It uses the same local Noto Sans font, typography, container widths, spacing, figure layout, responsive breakpoints, result tabs, and citation-copy interaction. The only additional CSS rule styles the unavailable paper button. There is no build step, package manager, external font request, or runtime dependency.
+## Method
 
-Preview with Python 3:
+- **Dual-stream feature encoding.** The FG branch encodes face adjacency, while the VG branch captures vertex connectivity and boundary structure. A dual-edge interaction module exchanges information between the two streams.
+- **Face-vertex contrastive learning.** A face embedding is aligned with the aggregated embedding of its boundary vertices.
+- **Boundary classification.** An auxiliary edge classification objective complements face segmentation by identifying edges between faces with different labels.
 
-```bash
-python3 -m http.server 8080 --directory docs
+![BRepDSN network architecture](docs/assets/pipeline.webp)
+
+## Results
+
+BRepDSN is evaluated on modeling operation segmentation, operation step segmentation, B-Rep classification, machining feature segmentation, and assembly mating.
+
+| Dataset | Task | Metric | BRepDSN |
+| --- | --- | --- | ---: |
+| Fusion360 | Modeling operation segmentation | mIoU | 88.50% |
+| CC3D | Modeling operation segmentation | mIoU | 60.35% |
+| CC3D-Ops | Operation step segmentation | Step accuracy | 66.23% |
+| TMCAD | B-Rep classification | Overall accuracy | 89.68% |
+| MFCAD++ | Machining feature segmentation | mIoU | 99.01% |
+
+## Citation
+
+```bibtex
+@misc{song_brepdsn,
+  title  = {BRepDSN: A Dual-stream Network Design for B-Rep
+            Representation Learning Leveraging the Duality
+            of Face and Boundary Vertices},
+  author = {Song, Haoxuan and Yang, Bingchen and Xiao, Jun
+            and Wonka, Peter and Jiang, Haiyong},
+  url    = {https://github.com/shinodashx/BrepDSN}
+}
 ```
-
-The site can be served at either a domain root or a subdirectory: all page assets, figures, and section links are relative. Publishing is separate from editing the page. For GitHub Pages, select the desired branch and `/docs` as the source in the repository's Pages settings, or copy the contents of `docs/` to the chosen path of an existing static site. No Pages settings or external deployment are changed by this repository.
-
-### Content and assets
-
-- [`docs/index.html`](docs/index.html): manuscript content, author details, figures, result table, and provisional BibTeX.
-- [`docs/style.css`](docs/style.css): CADRec's original styling, with the disabled paper-button state.
-- [`docs/script.js`](docs/script.js): CADRec's result tabs (including arrow, Home, and End keys) and citation copy, with manual-selection fallback when clipboard access is denied. Both result panels remain readable without JavaScript.
-- [`docs/assets/`](docs/assets/): self-hosted font, font license, favicon, and 2600-pixel-wide WebP figure previews generated from the supplied PDFs.
-- [`docs/files/`](docs/files/): unchanged full-resolution PDFs for the nine displayed figures.
-
-The text and numerical results come from the supplied `all.zip` manuscript, especially `main.tex`, `src/3-Method.tex`, and `src/4-Experiments.tex`. Figure previews use `Figs/teaser.pdf`, `pipeline.pdf`, `dualgraph.pdf`, `cl.pdf`, `comp.pdf`, `step.pdf`, `mating.pdf`, `retrieval.pdf`, and `ablationdual.pdf`. The full LaTeX source archive is not redistributed here.
-
-The manuscript's method macro spells the name **BRepDSN**, which is used on the page. The author email addresses follow the manuscript, including `songhaoxuan241@mails.ucas.ac.cn`.
-
-### Deliberately unavailable information
-
-The supplied archive contains neither a compiled full-paper PDF nor a video. The paper action is marked “coming soon”; the third action links to results rather than to a nonexistent video. Add the real paper file and replace the disabled span with a link when it is available.
-
-The manuscript explicitly marks its year, DOI, volume, and issue metadata as unconfirmed placeholders. The page therefore does not claim a conference, journal acceptance, publication year, or DOI. The blue header line is the research area, not a venue. BibTeX is a provisional manuscript citation. Once publication and deployment details are confirmed, update the citation and scholarly metadata, add the paper URL, and set the canonical and absolute Open Graph URLs for the final site address.
-
-The main table preserves all reported values and distinguishes results quoted from original papers. Improvements are **percentage-point differences**, not relative percentages. Operation-step results use **CC3D-Ops**. Assembly mating location and type metrics are separate; type prediction is conditioned on the ground-truth location.
-
-## Checks
-
-Run the dependency-free resource and accessibility-relationship checks:
-
-```bash
-python3 -m unittest discover -s tests -v
-node --check docs/script.js
-```
-
-For browser verification, check both result tabs with pointer and keyboard, expand the additional figures, copy the citation (including denied-clipboard fallback), and inspect narrow-screen table scrolling. Check the page without JavaScript as well. The static checks do not replace these interaction and visual checks.

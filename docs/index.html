@@ -6,10 +6,12 @@
   <meta name="theme-color" content="#ffffff">
   <title>BRepDSN — Dual-stream B-Rep Representation Learning</title>
   <meta name="description" content="BRepDSN learns boundary-aware B-Rep representations through a dual-stream face and vertex graph network, supporting segmentation, classification, and assembly mating.">
+  <link rel="canonical" href="https://shinodashx.github.io/BrepDSN/">
   <meta property="og:type" content="website">
   <meta property="og:title" content="BRepDSN: A Dual-stream Network Design for B-Rep Representation Learning Leveraging the Duality of Face and Boundary Vertices">
   <meta property="og:description" content="Learning from faces and their boundaries. A dual-stream network for B-Rep analysis across five CAD tasks.">
-  <meta property="og:image" content="assets/teaser.webp">
+  <meta property="og:url" content="https://shinodashx.github.io/BrepDSN/">
+  <meta property="og:image" content="https://shinodashx.github.io/BrepDSN/assets/teaser.webp">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="citation_title" content="BRepDSN: A Dual-stream Network Design for B-Rep Representation Learning Leveraging the Duality of Face and Boundary Vertices">
   <meta name="citation_author" content="Haoxuan Song">
@@ -30,10 +32,8 @@
       <p class="authors"><a href="mailto:songhaoxuan241@mails.ucas.ac.cn">Haoxuan Song<sup>1,*</sup></a><a href="mailto:bingchenyang@ntu.edu.sg">Bingchen Yang<sup>2,*</sup></a><a href="mailto:xiaojun@ucas.ac.cn">Jun Xiao<sup>1</sup></a><a href="mailto:peter.wonka@kaust.edu.sa">Peter Wonka<sup>3</sup></a><a href="mailto:haiyong.jiang@ucas.ac.cn">Haiyong Jiang<sup>1,✉</sup></a></p>
       <p class="affiliations"><span><sup>1</sup> University of Chinese Academy of Sciences</span><span><sup>2</sup> Nanyang Technological University</span><span><sup>3</sup> KAUST</span></p>
       <p class="corresponding">* Equal contribution · ✉ Corresponding author and project lead</p>
-      <p class="venue">B-Rep Representation Learning</p>
       <div class="actions">
-        <span class="button" aria-disabled="true" title="The full paper PDF is not yet available."><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M14 3H6a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8zM14 3v5h5M8 12h8M8 16h6"/></svg>Paper (coming soon)</span>
-        <a class="button" href="https://github.com/shinodashx/brepdsn"><svg class="github-icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M12 .8a11.2 11.2 0 0 0-3.54 21.83c.56.1.77-.24.77-.54v-2.1c-3.13.68-3.79-1.33-3.79-1.33-.51-1.3-1.25-1.64-1.25-1.64-1.02-.7.08-.69.08-.69 1.13.08 1.73 1.16 1.73 1.16 1 1.72 2.63 1.22 3.27.93.1-.73.4-1.22.71-1.5-2.5-.29-5.12-1.25-5.12-5.54 0-1.22.44-2.22 1.16-3-.12-.28-.5-1.42.11-2.96 0 0 .94-.3 3.08 1.15a10.7 10.7 0 0 1 5.6 0c2.14-1.45 3.08-1.15 3.08-1.15.61 1.54.23 2.68.11 2.96.72.78 1.16 1.78 1.16 3 0 4.3-2.63 5.25-5.14 5.53.41.35.77 1.03.77 2.08v3.1c0 .3.2.65.77.54A11.2 11.2 0 0 0 12 .8Z"/></svg>Code</a>
+        <a class="button" href="https://github.com/shinodashx/BrepDSN"><svg class="github-icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M12 .8a11.2 11.2 0 0 0-3.54 21.83c.56.1.77-.24.77-.54v-2.1c-3.13.68-3.79-1.33-3.79-1.33-.51-1.3-1.25-1.64-1.25-1.64-1.02-.7.08-.69.08-.69 1.13.08 1.73 1.16 1.73 1.16 1 1.72 2.63 1.22 3.27.93.1-.73.4-1.22.71-1.5-2.5-.29-5.12-1.25-5.12-5.54 0-1.22.44-2.22 1.16-3-.12-.28-.5-1.42.11-2.96 0 0 .94-.3 3.08 1.15a10.7 10.7 0 0 1 5.6 0c2.14-1.45 3.08-1.15 3.08-1.15.61 1.54.23 2.68.11 2.96.72.78 1.16 1.78 1.16 3 0 4.3-2.63 5.25-5.14 5.53.41.35.77 1.03.77 2.08v3.1c0 .3.2.65.77.54A11.2 11.2 0 0 0 12 .8Z"/></svg>Code</a>
         <a class="button" href="#results"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M4 19V5M4 19h16M8 15v-4M13 15V7M18 15v-6"/></svg>Results</a>
       </div>
       <figure class="teaser">
@@ -45,10 +45,9 @@
     <section id="abstract" class="section container">
       <h2>Abstract</h2>
       <p>Designing a neural network for Boundary Representation (B-Rep) models impacts fundamental tasks in Computer-Aided Design (CAD), Engineering (CAE), and Manufacturing (CAM). Existing methods primarily leverage face adjacency for B-Rep feature encoding, overlooking crucial boundary features from the B-Rep vertices.</p>
-      <p>We introduce <strong>BRepDSN</strong>, a dual-stream neural network that explicitly leverages complementary features from a Face-adjacency Graph (FG) and a Vertex-adjacency Graph (VG). Alternating message passing between the two streams enables bidirectional information exchange: faces gather boundary-aware cues from incident vertices, while vertices are refined by face-level context.</p>
-      <p>A face-vertex contrastive objective aligns each face embedding with the aggregated embedding of its boundary vertices. For segmentation tasks, an auxiliary boundary classification loss complements the main face segmentation task. Together, these objectives encourage boundary-aware and semantically aligned feature representations.</p>
-      <p>We evaluate the framework on five B-Rep processing tasks: modeling operation segmentation, operation step segmentation, B-Rep classification, machining feature segmentation, and assembly mating. The experiments demonstrate the value of combining face-level semantics with vertex-level boundary information across these tasks.</p>
-      <p class="small-note">Abridged from the supplied manuscript. Publication details and the full paper PDF will be added when available.</p>
+      <p>To address this, we introduce a novel dual-stream neural network, called <strong>BRepDSN</strong>, that explicitly leverages complementary features from both a Face-adjacency Graph (FG) and a Vertex-adjacency Graph (VG). Our method employs alternating message passing between these two graph streams with bidirectional information exchange. Specifically, faces gather boundary-aware cues from incident vertices through a dual mapping, while vertices are refined by face-level context, ensuring boundary-aware and semantically aligned feature encoding.</p>
+      <p>To further boost the performance, we propose a face-vertex contrastive objective. This objective constructs contrastive pairs based on the duality between a face's embedding and the aggregated embedding of its boundary vertices. Additionally, for segmentation tasks, we use an auxiliary classification loss to determine boundary edges, which acts as a dual task to the main face segmentation.</p>
+      <p>BRepDSN can be used for multiple B-Rep processing tasks. We evaluate the following example tasks: 1) B-Rep Modeling Operation Segmentation, 2) Operation Step Segmentation, 3) B-Rep Classification, 4) Machining Feature Segmentation, and 5) Assembly Mating. Extensive experiments show that our method sets a new state of the art on all five tasks.</p>
     </section>
 
     <section id="method" class="section container">
@@ -78,46 +77,44 @@
         <div id="panel-operations" role="tabpanel" aria-labelledby="tab-operations" tabindex="0"><figure class="paper-figure comparison"><a href="files/comp.pdf" target="_blank" rel="noopener" aria-label="Open the modeling operation comparison as a full-resolution PDF"><img src="assets/comp.webp" width="2600" height="2949" loading="lazy" alt="Modeling operation segmentation on CC3D and Fusion360. Each dataset compares input, ground truth, UV-Net, BRepNet, AutoMate, BRT, and BRepDSN, with colors identifying operation types."></a><figcaption><strong>Modeling operation segmentation.</strong> Comparisons on CC3D (left) and Fusion360 (right), including intricate boundaries, small geometric features, and smooth face transitions. Colors denote modeling operation types. <a href="files/comp.pdf" target="_blank" rel="noopener">View full resolution ↗</a></figcaption></figure></div>
         <div id="panel-steps" role="tabpanel" aria-labelledby="tab-steps" tabindex="0"><figure class="paper-figure comparison"><a href="files/step.pdf" target="_blank" rel="noopener" aria-label="Open the operation step comparison as a full-resolution PDF"><img src="assets/step.webp" width="2600" height="1163" loading="lazy" alt="Operation step segmentation comparing input, BRT, UV-Net, BRepNet, BRepDSN, and ground truth, with color-coded step assignments and errors highlighted in red."></a><figcaption><strong>Operation step segmentation.</strong> Faces are grouped by their modeling step rather than only by operation type. Each result group shows step assignments on the left and errors relative to ground truth in red on the right. BRepDSN achieves <strong>66.23% step accuracy</strong> on CC3D-Ops. <a href="files/step.pdf" target="_blank" rel="noopener">View full resolution ↗</a></figcaption></figure></div>
         <h3>Quantitative Comparison</h3>
-        <p>Modeling operation segmentation results from the supplied manuscript, using the official benchmark test splits. BRepDSN achieves <strong>88.50% mIoU on Fusion360</strong> and <strong>60.35% mIoU on CC3D</strong>, improving over the strongest reported baseline by 2.96 and 14.65 percentage points, respectively.</p>
+        <p>BRepDSN achieves <strong>88.50% mIoU on Fusion360</strong> and <strong>60.35% mIoU on CC3D</strong>, improving over the strongest baseline by 2.96 and 14.65 percentage points, respectively.</p>
         <div class="table-scroll" tabindex="0" role="region" aria-label="Segmentation results table, scroll horizontally on narrow screens">
           <table aria-label="Modeling operation segmentation on Fusion360 and CC3D">
-            <thead><tr><th rowspan="2" scope="col">Method</th><th rowspan="2" scope="col">Result source</th><th colspan="2" scope="colgroup">Fusion360</th><th colspan="2" scope="colgroup">CC3D</th></tr><tr><th scope="col">mAcc ↑</th><th scope="col">mIoU ↑</th><th scope="col">mAcc ↑</th><th scope="col">mIoU ↑</th></tr></thead>
+            <thead><tr><th rowspan="2" scope="col">Method</th><th colspan="3" scope="colgroup">Fusion360</th><th colspan="3" scope="colgroup">CC3D</th></tr><tr><th scope="col">oAcc ↑</th><th scope="col">mAcc ↑</th><th scope="col">mIoU ↑</th><th scope="col">oAcc ↑</th><th scope="col">mAcc ↑</th><th scope="col">mIoU ↑</th></tr></thead>
             <tbody>
-              <tr><th scope="row">Hier-CADNet<sup>★</sup></th><td>Original paper</td><td>—</td><td>67.9</td><td>—</td><td>26.9</td></tr>
-              <tr><th scope="row">UV-Net</th><td>This study</td><td>71.41</td><td>72.4</td><td>36.53</td><td>26.49</td></tr>
-              <tr><th scope="row">BRepNet</th><td>This study</td><td>79.50</td><td>81.4</td><td>47.95</td><td>34.24</td></tr>
-              <tr><th scope="row">AutoMate</th><td>This study</td><td>85.25</td><td>80.80</td><td>54.74</td><td>44.09</td></tr>
-              <tr><th scope="row">BRT</th><td>This study</td><td>84.55</td><td>79.23</td><td>57.43</td><td>45.7</td></tr>
-              <tr><th scope="row">UVConv<sup>★</sup></th><td>Original paper</td><td>—</td><td>80.16</td><td>—</td><td>—</td></tr>
-              <tr><th scope="row">Brep2Shape<sup>★</sup></th><td>Original paper</td><td>—</td><td>83.77</td><td>—</td><td>—</td></tr>
-              <tr><th scope="row">CADOps-Net<sup>★</sup></th><td>Original paper</td><td>—</td><td>84.2</td><td>—</td><td>44.3</td></tr>
-              <tr><th scope="row">BRep-BERT<sup>★</sup></th><td>Original paper</td><td>—</td><td>85.54</td><td>—</td><td>—</td></tr>
-              <tr class="ours"><th scope="row">BRepDSN <span>Ours</span></th><td>This study</td><td>91.39</td><td>88.50</td><td>68.51</td><td>60.35</td></tr>
+              <tr><th scope="row">Hier-CADNet<sup>★</sup></th><td>88.9</td><td>—</td><td>67.9</td><td>57.5</td><td>—</td><td>26.9</td></tr>
+              <tr><th scope="row">UV-Net</th><td>92.3</td><td>71.41</td><td>72.4</td><td>65.11</td><td>36.53</td><td>26.49</td></tr>
+              <tr><th scope="row">BRepNet</th><td>94.3</td><td>79.50</td><td>81.4</td><td>71.4</td><td>47.95</td><td>34.24</td></tr>
+              <tr><th scope="row">AutoMate</th><td>94.78</td><td>85.25</td><td>80.80</td><td>74.44</td><td>54.74</td><td>44.09</td></tr>
+              <tr><th scope="row">BRT</th><td>94.48</td><td>84.55</td><td>79.23</td><td>72.7</td><td>57.43</td><td>45.7</td></tr>
+              <tr><th scope="row">UVConv<sup>★</sup></th><td>94.65</td><td>—</td><td>80.16</td><td>—</td><td>—</td><td>—</td></tr>
+              <tr><th scope="row">Brep2Shape<sup>★</sup></th><td>96.88</td><td>—</td><td>83.77</td><td>—</td><td>—</td><td>—</td></tr>
+              <tr><th scope="row">CADOps-Net<sup>★</sup></th><td>95.9</td><td>—</td><td>84.2</td><td>75.0</td><td>—</td><td>44.3</td></tr>
+              <tr><th scope="row">BRep-BERT<sup>★</sup></th><td>96.02</td><td>—</td><td>85.54</td><td>—</td><td>—</td><td>—</td></tr>
+              <tr class="ours"><th scope="row">BRepDSN <span>Ours</span></th><td>97.16</td><td>91.39</td><td>88.50</td><td>84.01</td><td>68.51</td><td>60.35</td></tr>
             </tbody>
           </table>
         </div>
-        <p class="small-note">All scores are percentages. mAcc: mean class accuracy; mIoU: mean intersection over union. ↑ Higher is better. ★ Results quoted from original papers; — not reported. “This study” refers to the supplied BRepDSN manuscript. AutoMate uses an adapted face-classification head. CADOps-Net additionally uses sequential CAD-history supervision during training.</p>
-        <details class="more-results"><summary>Assembly Mating</summary><figure class="paper-figure"><a href="files/mating.pdf" target="_blank" rel="noopener" aria-label="Open the assembly mating comparison as a full-resolution PDF"><img src="assets/mating.webp" width="2600" height="2136" loading="lazy" alt="Assembly mating examples compare AutoMate, UV-Net, BRepNet, and BRepDSN. Blue and yellow parts are assembled with predicted mating types and correctness marks."></a><figcaption><strong>Assembly mating.</strong> BRepDSN achieves <strong>64.9% location Acc@1</strong> and <strong>94.2% type Acc@1</strong> on AutoMate. Location ranking uses candidates on selected faces; type prediction is conditioned on the ground-truth mating location. These are separate task metrics, not an end-to-end assembly success rate. <a href="files/mating.pdf" target="_blank" rel="noopener">View full resolution ↗</a></figcaption></figure></details>
+        <p class="small-note">All scores are percentages. oAcc: overall face accuracy; mAcc: mean class accuracy; mIoU: mean intersection over union. ↑ Higher is better. ★ Results from original papers; — not reported.</p>
+        <details class="more-results"><summary>Assembly Mating</summary><figure class="paper-figure"><a href="files/mating.pdf" target="_blank" rel="noopener" aria-label="Open the assembly mating comparison as a full-resolution PDF"><img src="assets/mating.webp" width="2600" height="2136" loading="lazy" alt="Assembly mating examples compare AutoMate, UV-Net, BRepNet, and BRepDSN. Blue and yellow parts are assembled with predicted mating types and correctness marks."></a><figcaption><strong>Assembly mating.</strong> BRepDSN achieves <strong>64.9% location Acc@1</strong> and <strong>94.2% type Acc@1</strong> on AutoMate. Mating type is evaluated at the ground-truth mating location. <a href="files/mating.pdf" target="_blank" rel="noopener">View full resolution ↗</a></figcaption></figure></details>
         <details class="more-results"><summary>Shape Retrieval</summary><figure class="paper-figure"><a href="files/retrieval.pdf" target="_blank" rel="noopener" aria-label="Open the shape retrieval results as a full-resolution PDF"><img src="assets/retrieval.webp" width="2600" height="2402" loading="lazy" alt="B-Rep shape retrieval examples with query CAD models in the left column and six geometrically similar retrieved models to the right."></a><figcaption><strong>Shape retrieval on CC3D.</strong> Each test-set query appears in the left column, followed by six results ranked by learned graph similarity. The retrieval gallery combines training and validation shapes. <a href="files/retrieval.pdf" target="_blank" rel="noopener">View full resolution ↗</a></figcaption></figure></details>
-        <details class="more-results"><summary>Dual-Stream Ablation</summary><figure class="paper-figure"><a href="files/ablationdual.pdf" target="_blank" rel="noopener" aria-label="Open the dual-stream ablation as a full-resolution PDF"><img src="assets/ablationdual.webp" width="2600" height="4558" loading="lazy" alt="Color-coded segmentation ablations compare ground truth, a face-graph-only model, and dual-stream network variants."></a><figcaption><strong>Dual-stream ablation on CC3D.</strong> Variants examine the vertex-graph branch, dual-edge interaction, and auxiliary boundary-classification loss. These architectural ablations omit the contrastive loss used by the full model. <a href="files/ablationdual.pdf" target="_blank" rel="noopener">View full resolution ↗</a></figcaption></figure></details>
+        <details class="more-results"><summary>Dual-Stream Ablation</summary><figure class="paper-figure"><a href="files/ablationdual.pdf" target="_blank" rel="noopener" aria-label="Open the dual-stream ablation as a full-resolution PDF"><img src="assets/ablationdual.webp" width="2600" height="4558" loading="lazy" alt="Color-coded segmentation ablations compare ground truth, a face-graph-only model, and dual-stream network variants."></a><figcaption><strong>Dual-stream ablation on CC3D.</strong> Qualitative comparisons with and without the vertex-graph branch, dual-edge interaction module, and auxiliary boundary classification loss. <a href="files/ablationdual.pdf" target="_blank" rel="noopener">View full resolution ↗</a></figcaption></figure></details>
       </div>
     </section>
 
     <section id="citation" class="section container">
       <h2>BibTeX</h2>
       <p>If you find this work useful in your research, please consider citing our paper.</p>
-      <p class="small-note">Provisional manuscript citation. The supplied source does not confirm the publication year, venue, or DOI; those fields are intentionally omitted.</p>
       <div class="citation-code"><button id="copy-citation" type="button" hidden>Copy citation</button><pre><code id="bibtex">@misc{song_brepdsn,
   title  = {BRepDSN: A Dual-stream Network Design for B-Rep
             Representation Learning Leveraging the Duality
             of Face and Boundary Vertices},
   author = {Song, Haoxuan and Yang, Bingchen and Xiao, Jun
             and Wonka, Peter and Jiang, Haiyong},
-  note   = {Research manuscript},
-  url    = {https://github.com/shinodashx/brepdsn}
+  url    = {https://github.com/shinodashx/BrepDSN}
 }</code></pre><p id="copy-status" class="copy-status" role="status"></p></div>
     </section>
   </main>
-  <footer class="footer"><p>Page layout follows <a href="https://shinodashx.github.io/CADRec/">CADRec</a>, inspired by <a href="https://snitro.github.io/Pointer-CAD-Page/">Pointer-CAD</a>, <a href="https://voyleg.github.io/cadfs/">CADFS</a>, and <a href="https://cadknitter.github.io/">CADKnitter</a>.</p><p><a href="https://github.com/shinodashx/brepdsn">BRepDSN on GitHub</a></p></footer>
+  <footer class="footer"><p><a href="https://github.com/shinodashx/BrepDSN">BRepDSN on GitHub</a></p></footer>
 </body>
 </html>
