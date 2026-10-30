@@ -1,0 +1,113 @@
+# 优化后的完整增强版本 - 仅保留稳定的对比学习功能
+out_dir: results
+custom_metrics: ['edge_segmentation', 'contrastive_learning']
+dataset:
+    format: PyG
+    name: DUAL_CC3D
+    task: node
+    task_type: semantic_segmentation
+    dir: datasets/CC3D/CC3D_V3_2.pkl
+
+    # 使用快速版增强编码器以保证性能
+    node_encoder: true
+    node_encoder_name: dual_node_brep_f
+    node_encoder_bn: false
+    edge_encoder: false
+    augmentation: false
+
+train:
+    batch_size: 16
+    eval_period: 4
+    ckpt_period: 10
+    sampler: full_batch
+    auto_resume: false
+    epoch_resume: -1
+
+val:
+    batch_size: 16
+    extra_infos: false
+
+share:
+    dim_edge_in: 12
+    dim_node_in: 7
+    aux_dim_node_in: 3
+    aux_dim_edge_in: 12
+    aux_dim_edge_out: 7
+
+model:
+    type: DUAL_GNN_BASE
+    has_aux: true
+    loss_fun: cross_entropy
+    loss_cfg:
+        num_optype: 11
+    aux_loss_fun: cross_entropy
+    aux_weight: 0.5
+    
+    # 启用对比学习
+    has_contrastive: true
+    # contrastive_loss_fun: edge_guided_contrastive
+    contrastive_loss_fun: supervised_face_vertices_congruence
+    contrastive_loss_cfg:
+        temperature: 0.1
+        contrastive_weight: 0.1
+    
+    has_multi_stage: false
+    edge_decoding: dot
+    graph_pooling: add
+    loss_regularization: false
+
+gnn:
+    stage_type: DUAL_stack
+    layers_pre_mp: 0
+    layers_mp: 2
+    layers_post_mp: 1
+    dim_inner: 256
+    batchnorm: false
+    act: prelu
+    agg: mean
+    normalize_adj: false
+    dropout: 0.
+    l2norm: false
+
+    layer_pre_type: Veno_Orig_Layer
+    pre_has_act: false
+    pre_has_final_act: false
+
+    layer_type: Brep_Veno_Orig_Layer
+    has_act: false
+    has_final_act: false
+    layer_cfg:
+        intermediate_output: false
+        prefix_num: 12
+        
+        veno_stage: 'Brep_Veno'
+        veno_2_orig: 'Brep_Veno_to_Orig'
+        v_node_arch: 'depth_decouple'
+        
+        orig_stage: 'Brep_Orig'
+        orig_2_veno: 'Brep_Orig_to_Veno'
+        o_node_attn: 'performer'
+        o_node_heads: 8
+        o_node_dropout: 0.1
+        o_node_norm: 'batch_norm'
+
+    # 使用增强头（仅含对比学习损失计算）
+    head: brep_dual_head_enhanced
+    head_cfg:
+        norm: 'batch'
+        mask: false
+        use_edge_contrastive: true  # 必须为true以计算对比损失
+        use_edge_enhance: false     # 边增强已被禁用
+        temperature: 0.07
+
+optim:
+    optimizer: adam
+    base_lr: 0.0003
+    eta_min: 0.00001
+    max_epoch: 300
+    milestones: 200
+    const_factor: 0.1
+    scheduler: cos_constant
+
+device: cuda:0
+seed: 1 
